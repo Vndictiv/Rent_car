@@ -60,7 +60,7 @@ public class CarController {
 
 
     @PostMapping("/rentCar")
-    public String rentCarDetails(@RequestParam("carId") int theCarId, Model theModel){
+    public String rentCarDetails(@RequestParam("carId") int theCarId,@ModelAttribute("rentDate") RentDate theRentDate, Model theModel){
 
 
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -69,7 +69,7 @@ public class CarController {
 
             User theUser = userService.findByEmail(userName);
 
-            RentDate theRentDate = new RentDate();
+
 
             theRentDate.setUser(theUser);
             theRentDate.setCar(carService.findById(theCarId));
@@ -77,7 +77,7 @@ public class CarController {
 
            // theModel.addAttribute("carId", theCar);
 
-            theModel.addAttribute("Car", theRentDate.getCar());
+            theModel.addAttribute("rentDate", theRentDate);
 
         System.out.println(theRentDate.getCar());
 

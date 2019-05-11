@@ -38,15 +38,8 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car findById(int theId) {
 
-        Optional<Car> result = carRepository.findById(theId);
 
-        Car theCar = null;
-
-        if(result.isPresent()){
-            theCar.getCarId();
-        }
-        else
-            throw new RuntimeException("No car with id: " + theId);
+        Car theCar = carRepository.findById(theId);
 
         return theCar;
     }

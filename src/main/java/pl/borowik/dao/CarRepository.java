@@ -5,4 +5,6 @@ import pl.borowik.model.Car;
 
 public interface CarRepository extends JpaRepository<Car, Integer> {
 
+    Car findById(int theId);
+
 }
