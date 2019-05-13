@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.borowik.model.Car;
 import pl.borowik.model.RentDate;
@@ -16,8 +17,10 @@ import pl.borowik.service.CarService;
 import pl.borowik.service.RentDateService;
 import pl.borowik.service.UserService;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequestMapping("/car")
@@ -60,26 +63,33 @@ public class CarController {
 
 
     @PostMapping("/rentCar")
-    public String rentCarDetails(@RequestParam("carId") int theCarId,@ModelAttribute("rentDate") RentDate theRentDate, Model theModel){
+    public String rentCarDetails(@RequestParam("carId") int theCarId,
+                                 @ModelAttribute("rentDate") RentDate theRentDate,
+                                 Model theModel) throws Exception{
 
 
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Car validCar = carService.findById(theCarId);
 
-            String userName = ((UserDetails) principal).getUsername();
-
-            User theUser = userService.findByEmail(userName);
-
-
-
-            theRentDate.setUser(theUser);
-            theRentDate.setCar(carService.findById(theCarId));
+            if(validCar.getRented() == true){
+                throw new Exception("Select other car");
+            }
+            else {
 
 
-           // theModel.addAttribute("carId", theCar);
+                Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                String userName = ((UserDetails) principal).getUsername();
+                User theUser = userService.findByEmail(userName);
 
-            theModel.addAttribute("rentDate", theRentDate);
 
-        System.out.println(theRentDate.getCar());
+                theRentDate.setUser(theUser);
+                theRentDate.setCar(carService.findById(theCarId));
+
+
+
+                theModel.addAttribute("rentDate", theRentDate);
+
+
+            }
 
         return "rent-details";
     }
@@ -95,14 +105,7 @@ public class CarController {
     }
 
     @PostMapping("/rent")
-    public String addRent(@ModelAttribute("rentDate")RentDate theRentDate) throws Exception{
-
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//
-//        String userName = ((UserDetails) principal).getUsername();
-//
-//        User theUser = userService.findByEmail(userName);
-//        theRentDate.setUser(theUser);
+    public String addRent(@ModelAttribute("rentDate")RentDate theRentDate, Model theModel) throws Exception{
 
 
         if(theRentDate.getRentDate().compareTo(theRentDate.getReturnDate()) > 0){
@@ -112,12 +115,34 @@ public class CarController {
 
         rentDateService.save(theRentDate);
 
-        //wartość do przekazania dalej
-       // double cena = theRentDate.getRentDate().compareTo(theRentDate.getReturnDate()) * (carService.findById().getDailyCost());
+        Car theCar = theRentDate.getCar();
+        theCar.setRented(true);
+        carService.save(theCar);
+
+        //ToDo
+        double thePrize = 0;
+        //ToDo liczba różnic daty do obliczenia
+        //thePrize = theRentDate.getRentDate().compareTo(theRentDate.getReturnDate()) * (theCar.getDailyCost());
+
+       long daysBetween = ((theRentDate.getReturnDate().getTime() - theRentDate.getRentDate().getTime()));
+       // TimeUnit.DAYS.convert(daysBetween, TimeUnit.MILLISECONDS);
+
+       thePrize = (TimeUnit.DAYS.convert(daysBetween, TimeUnit.MILLISECONDS)) * (theCar.getDailyCost());
 
 
-        return "redirect:/car/rent/confirmation";
+        theModel.addAttribute("prize", thePrize);
+
+        System.out.println("rented day: " + theRentDate.getRentDate());
+        System.out.println("rented day + getTime: " + theRentDate.getRentDate().getTime());
+        System.out.println("return day: " + theRentDate.getReturnDate());
+        System.out.println("return day + get time: " + theRentDate.getReturnDate().getTime());
+
+        System.out.println("total prize: " +thePrize);
+
+
+        return "rent-confirmation";
     }
+
 
     @GetMapping("/rent/confirmation")
     public String rentConfirmation(){

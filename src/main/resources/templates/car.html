@@ -32,41 +32,26 @@ Car list
                 <td th:text="${theCars.model}" />
                 <td th:text="${theCars.dailyCost}" />
                 <td th:text="${theCars.rented} ? 'Unavaliable' : 'Available'" />
-
-                <div class="row">
-
-                    <div class="col-small">
+                <td>
+                    <div class="row">
+                        <div class="col-small" th:unless="${theCars.rented}" >
                             <form action="#" th:action="@{/car/rentCar}" method="POST">
                                 <input type="hidden" name="carId" th:value="${theCars.carId}" />
-                                <!--<input type="hidden" name="userId" th:value="${user.id}" />-->
                                 <button type="submit" class="btn btn-info btn-sm ml-3 mr-1">rent this car</button>
-
                             </form>
+                        </div>
+                        <div class="row" th:if="${theCars.rented}">
+                    <!--<button class="col-small"  >-->
+
+                            <button class="btn btn-info btn-sm ml-3 mr-1"
+                            onclick="if (!(confirm('Car is alredy rented'))) return false"/>Car is rented</button>
+
+                         </div>
                     </div>
-
-                        <!--<div class="col-small">-->
-                            <!--&lt;!&ndash; Add "delete" button/link &ndash;&gt;-->
-
-                            <!--<form action="#" th:action="@{/students/delete}" method="POST">-->
-
-                                <!--<input  type="hidden" name="studentId" th:value="${tempStudent.id}" />-->
-                                <!--<button type="submit" class="btn btn-danger btn-sm"-->
-                                        <!--onclick="if (!(confirm('Are you sure you want to delete this student?'))) return false">-->
-                                    <!--Delete-->
-                                <!--</button>-->
-
-                            <!--</form>-->
-                        <!--</div>-->
-                    </div>
-                <!--</td>-->
-
-
+                </td>
             </tr>
             </tbody>
         </table>
-
     </div>
-    </div>
-
 </body>
 </html>

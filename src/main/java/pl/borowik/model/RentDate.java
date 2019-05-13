@@ -3,7 +3,9 @@ package pl.borowik.model;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.sql.Date;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "rent_date")
@@ -88,5 +90,10 @@ public class RentDate {
                 ", rentDate=" + rentDate +
                 ", returnDate=" + returnDate +
                 '}';
+    }
+
+    public static long betweenDates(Date firstDate, Date secondDate)
+    {
+        return ChronoUnit.DAYS.between(firstDate.toInstant(), secondDate.toInstant());
     }
 }

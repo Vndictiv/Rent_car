@@ -1,12 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Rent confirmation</title>
 </head>
 <body>
 
+<div>
 You just rented the car!
+<br>
+total prize:
+
+ <p th:utext="${prize}" />
+
+</div>
 
 </body>
 </html>
