@@ -37,14 +37,12 @@ Car list
                         <div class="col-small" th:unless="${theCars.rented}" >
                             <form action="#" th:action="@{/car/rentCar}" method="POST">
                                 <input type="hidden" name="carId" th:value="${theCars.carId}" />
-                                <button type="submit" class="btn btn-info btn-sm ml-3 mr-1">rent this car</button>
+                                <button type="submit" class="btn btn-info btn-sm ">Rent this car</button>
                             </form>
                         </div>
                         <div class="row" th:if="${theCars.rented}">
-                    <!--<button class="col-small"  >-->
 
-                            <button class="btn btn-info btn-sm ml-3 mr-1"
-                            onclick="if (!(confirm('Car is alredy rented'))) return false"/>Car is rented</button>
+                            <button class="btn btn-info btn-sm ml-3 mr-1" onclick="if (!(confirm('This car is alredy rented'))) return false"/>Car is rented</button>
 
                          </div>
                     </div>

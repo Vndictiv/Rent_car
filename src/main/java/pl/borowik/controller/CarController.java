@@ -1,14 +1,10 @@
 package pl.borowik.controller;
 
-import javafx.beans.binding.IntegerBinding;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.borowik.model.Car;
 import pl.borowik.model.RentDate;
@@ -17,9 +13,7 @@ import pl.borowik.service.CarService;
 import pl.borowik.service.RentDateService;
 import pl.borowik.service.UserService;
 
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Controller
@@ -107,38 +101,23 @@ public class CarController {
     @PostMapping("/rent")
     public String addRent(@ModelAttribute("rentDate")RentDate theRentDate, Model theModel) throws Exception{
 
-
         if(theRentDate.getRentDate().compareTo(theRentDate.getReturnDate()) > 0){
             throw new Exception();
         }
         else
-
-        rentDateService.save(theRentDate);
+            rentDateService.save(theRentDate);
 
         Car theCar = theRentDate.getCar();
         theCar.setRented(true);
         carService.save(theCar);
 
-        //ToDo
-        double thePrize = 0;
-        //ToDo liczba różnic daty do obliczenia
-        //thePrize = theRentDate.getRentDate().compareTo(theRentDate.getReturnDate()) * (theCar.getDailyCost());
 
        long daysBetween = ((theRentDate.getReturnDate().getTime() - theRentDate.getRentDate().getTime()));
-       // TimeUnit.DAYS.convert(daysBetween, TimeUnit.MILLISECONDS);
 
-       thePrize = (TimeUnit.DAYS.convert(daysBetween, TimeUnit.MILLISECONDS)) * (theCar.getDailyCost());
+       double thePrice = (TimeUnit.DAYS.convert(daysBetween, TimeUnit.MILLISECONDS)) * (theCar.getDailyCost());
 
 
-        theModel.addAttribute("prize", thePrize);
-
-        System.out.println("rented day: " + theRentDate.getRentDate());
-        System.out.println("rented day + getTime: " + theRentDate.getRentDate().getTime());
-        System.out.println("return day: " + theRentDate.getReturnDate());
-        System.out.println("return day + get time: " + theRentDate.getReturnDate().getTime());
-
-        System.out.println("total prize: " +thePrize);
-
+        theModel.addAttribute("price", thePrice);
 
         return "rent-confirmation";
     }
