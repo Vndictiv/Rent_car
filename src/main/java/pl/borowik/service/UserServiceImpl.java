@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isUserAlreadyPresent(User user) {
+
         boolean isUserAlreadyExists = false;
         User existingUser = userRepository.findByEmail(user.getEmail());
 

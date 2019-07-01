@@ -55,6 +55,28 @@ public class CarController {
         return "rent-details";
     }
 
+    @GetMapping("/add")
+    public String showFormForAdd(){
+        return "add-car";
+    }
+
+    @PostMapping("/add")
+    public String addCar(@ModelAttribute("car")Car car){
+
+        if(car.getDailyCost() < 0){
+            throw new IllegalArgumentException("Insert more than 0");
+        }
+
+        else
+
+        car.setRented(false);
+
+        carService.save(car);
+
+        return "redirect:/car/list";
+
+    }
+
 
     @PostMapping("/rentCar")
     public String rentCarDetails(@RequestParam("carId") int theCarId,

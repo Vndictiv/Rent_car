@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:security="http://www.springframework.org/security/tags">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -51,5 +55,11 @@ Car list
             </tbody>
         </table>
     </div>
+
+<p>
+    <a href="/logout">LOGOUT</a>
+</p>
+
+
 </body>
 </html>

@@ -1,10 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Add Car</title>
 </head>
 <body>
-$END$
+
+<form action="/car/add" th:action="@{/car/add}" th:object="${car}" method="post">
+
+    <input type="text" value="type" placeholder="Type">
+    <input type="text" value="producer" placeholder="producer">
+    <input type="text" value="model" placeholder="model">
+    <input type="number" value="price per day" name="dailyCost">
+    <input type="submit" name="Save">
+
+</form>
+
 </body>
 </html>

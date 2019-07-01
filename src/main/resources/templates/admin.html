@@ -1,10 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.springframework.org/security/tags">
 <head>
     <meta charset="UTF-8">
     <title>Admin Home</title>
 </head>
 <body>
 Hello Admin
+
+
+<!--<div sec:authorize="hasRole('SUPER_USER')">-->
+<!--<div th:if="${#authorization.expression('hasRole('SUPER_USER')')}">-->
+
+<!--<div sec:authorize="hasAuthority('SUPER_USER')">-->
+
+<div sec:authorize access="hasRole('SUPER_USER')">
+    <p>
+        <a href="/car/add">Add new car</a>
+    </p>
+
+</div >
+<!--</div>-->
+
 </body>
 </html>
