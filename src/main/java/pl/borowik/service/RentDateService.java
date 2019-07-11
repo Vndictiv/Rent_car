@@ -6,4 +6,5 @@ public interface RentDateService {
 
     void save(RentDate rentDate);
     RentDate findById(int theId);
+
 }

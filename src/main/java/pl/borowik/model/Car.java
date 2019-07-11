@@ -35,7 +35,8 @@ public class Car {
 
     }
 
-    public Car(String type, String producer, String model, double dailyCost, Boolean rented) {
+    public Car(int carId, String type, String producer, String model, double dailyCost, Boolean rented) {
+        this.carId= carId;
         this.type = type;
         this.producer = producer;
         this.model = model;

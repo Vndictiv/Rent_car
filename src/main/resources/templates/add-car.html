@@ -1,20 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Add Car</title>
 </head>
 <body>
 
-<form action="/car/add" th:action="@{/car/add}" th:object="${car}" method="post">
+<div>
 
-    <input type="text" value="type" placeholder="Type">
-    <input type="text" value="producer" placeholder="producer">
-    <input type="text" value="model" placeholder="model">
-    <input type="number" value="price per day" name="dailyCost">
-    <input type="submit" name="Save">
+<form action="#" th:action="@{/car/addCar}" th:object="${car}" method="POST">
+
+    <input type="text" th:field="*{type}" placeholder="type">
+    <input type="text" th:field="*{producer}" placeholder="producer">
+    <input type="text" th:field="*{model}" placeholder="model">
+    <input type="number" th:field="*{dailyCost}" placeholder="dailyCost">
+
+    <button type="submit">Save</button>
 
 </form>
-
+</div>
 </body>
 </html>

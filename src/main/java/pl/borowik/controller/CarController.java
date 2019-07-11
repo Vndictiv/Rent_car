@@ -1,6 +1,7 @@
 package pl.borowik.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -27,13 +28,11 @@ public class CarController {
     private UserService userService;
 
 
-    @Autowired
-    public CarController(CarService theCarService, RentDateService rentDateService, UserService theUserService){
-        carService = theCarService;
+    public CarController(CarService carService, RentDateService rentDateService, UserService userService) {
+        this.carService = carService;
         this.rentDateService = rentDateService;
-        userService = theUserService;
+        this.userService = userService;
     }
-
 
     @GetMapping("/list")
     public String carList(Model model){
@@ -55,12 +54,17 @@ public class CarController {
         return "rent-details";
     }
 
-    @GetMapping("/add")
-    public String showFormForAdd(){
+    @GetMapping("/formForAdd")
+    public String showFormForAdd(Model model){
+
+        Car theCar = new Car();
+
+        model.addAttribute("car", theCar);
+
         return "add-car";
     }
 
-    @PostMapping("/add")
+    @PostMapping("/addCar")
     public String addCar(@ModelAttribute("car")Car car){
 
         if(car.getDailyCost() < 0){
@@ -78,34 +82,78 @@ public class CarController {
     }
 
 
+//    @PostMapping("/rentCar")
+//    public String rentCarDetails(@RequestParam("carId") int theCarId,
+//                                 @ModelAttribute("rentDate") RentDate theRentDate,
+//                                 Model theModel) throws Exception{
+//
+//
+//            Car validCar = carService.findById(theCarId);
+//
+//            if(validCar.getRented() == true){
+//                throw new Exception("Select other car");
+//            }
+//            else {
+//
+//
+//                Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//                String userName = ((UserDetails) principal).getUsername();
+//                User theUser = userService.findByEmail(userName);
+//
+//
+//                theRentDate.setUser(theUser);
+//                theRentDate.setCar(carService.findById(theCarId));
+//
+//
+//
+//                theModel.addAttribute("rentDate", theRentDate);
+//
+//
+//            }
+//
+//        return "rent-details";
+//    }
+//
+//    @GetMapping("/rentCarGet")
+//    public String rentForm(Model theModel){
+//
+//        RentDate theRentDate = new RentDate();
+//
+//        theModel.addAttribute("rentDate", theRentDate);
+//
+//        return "rent-details";
+//    }
+
+    //Nowe
+
     @PostMapping("/rentCar")
     public String rentCarDetails(@RequestParam("carId") int theCarId,
                                  @ModelAttribute("rentDate") RentDate theRentDate,
                                  Model theModel) throws Exception{
 
 
-            Car validCar = carService.findById(theCarId);
+        Car validCar = carService.findById(theCarId);
 
-            if(validCar.getRented() == true){
-                throw new Exception("Select other car");
-            }
-            else {
-
-
-                Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-                String userName = ((UserDetails) principal).getUsername();
-                User theUser = userService.findByEmail(userName);
+        if(validCar.getRented() == true){
+            throw new Exception("Select other car");
+        }
+        else {
 
 
-                theRentDate.setUser(theUser);
-                theRentDate.setCar(carService.findById(theCarId));
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String userName = ((UserDetails) principal).getUsername();
+            User theUser = userService.findByEmail(userName);
+
+
+            theRentDate.setUser(theUser);
+            theRentDate.setCar(carService.findById(theCarId));
 
 
 
-                theModel.addAttribute("rentDate", theRentDate);
+            theModel.addAttribute("rentDate", theRentDate);
 
 
-            }
+        }
 
         return "rent-details";
     }
@@ -134,9 +182,9 @@ public class CarController {
         carService.save(theCar);
 
 
-       long daysBetween = ((theRentDate.getReturnDate().getTime() - theRentDate.getRentDate().getTime()));
+        long daysBetween = ((theRentDate.getReturnDate().getTime() - theRentDate.getRentDate().getTime()));
 
-       double thePrice = (TimeUnit.DAYS.convert(daysBetween, TimeUnit.MILLISECONDS)) * (theCar.getDailyCost());
+        double thePrice = (TimeUnit.DAYS.convert(daysBetween, TimeUnit.MILLISECONDS)) * (theCar.getDailyCost());
 
 
         theModel.addAttribute("price", thePrice);
@@ -151,6 +199,43 @@ public class CarController {
 
         return "rent-confirmation";
     }
+
+//    @PostMapping("/rent")
+//    public String addRent(@ModelAttribute("rentDate")RentDate theRentDate, Model theModel) throws Exception{
+//
+//
+//            if (theRentDate.getRentDate().compareTo(theRentDate.getReturnDate()) > 0) {
+//                throw new Exception("select day after return day!!!");
+//            } else
+//
+//
+//                rentDateService.save(theRentDate);
+//
+//
+//            Car theCar = theRentDate.getCar();
+//            theCar.setRented(true);
+//            carService.save(theCar);
+//
+//
+//            long daysBetween = (((theRentDate.getReturnDate().getTime()) - (theRentDate.getRentDate().getTime())));
+//
+//           double thePrice = (TimeUnit.DAYS.convert(daysBetween, TimeUnit.MILLISECONDS)) * (theCar.getDailyCost());
+//
+//
+//
+//            theModel.addAttribute("price", thePrice);
+//
+//
+//        return "rent-confirmation";
+//    }
+//
+
+//    @GetMapping("/rent/confirmation")
+//    public String rentConfirmation(){
+//
+//
+//        return "rent-confirmation";
+//    }
 
 
 }

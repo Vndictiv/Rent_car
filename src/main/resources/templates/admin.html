@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.springframework.org/security/tags">
+<html lang="en" xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Admin Home</title>
@@ -7,6 +8,9 @@
 <body>
 Hello Admin
 
+<br>
+
+<a href="/car/list">CAR LIST</a>
 
 <!--<div sec:authorize="hasRole('SUPER_USER')">-->
 <!--<div th:if="${#authorization.expression('hasRole('SUPER_USER')')}">-->
@@ -15,7 +19,7 @@ Hello Admin
 
 <div sec:authorize access="hasRole('SUPER_USER')">
     <p>
-        <a href="/car/add">Add new car</a>
+        <a href="/car/formForAdd">Add new car</a>
     </p>
 
 </div >
