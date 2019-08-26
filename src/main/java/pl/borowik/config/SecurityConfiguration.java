@@ -68,7 +68,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/").and()
                 .exceptionHandling()
-                .accessDeniedPage("/access-denied");
+                .accessDeniedPage("/access-denied")
+                
+                .and()
+                .rememberMe().key("uniqueAndSecret").tokenValiditySeconds(86400);
     }
 
     @Override
